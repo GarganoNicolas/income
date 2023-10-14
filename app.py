@@ -33,7 +33,7 @@ def predict(*args):
 
     data3=single_instance.copy()
     data2=data3
-    data2['sexo']=data3['sexo'].replace({'hombre': 0, 'mujer': 1})
+    data2['sexo']=data3['sexo'].replace({'Hombre': 0, 'Mujer': 1})
     data2['alfabeto']=data3['alfabeto'].replace({'Si': 0, 'No': 1})
     replacements = {
         'No paga ni le descuentan': 1,
@@ -76,11 +76,17 @@ def predict(*args):
 
 
     # Cast numpy.int64 to just a int
-    income = int(prediction[0])
+    result = int(prediction[0])
 
 
     # Adaptación respuesta
-    response = '$' + str(income) + '💸'
+    result = str(result)
+    length = len(result)
+    if length > 3:
+        first_part = result[:length-3]
+        second_part = result[length-3:]
+        result = first_part + '.' + second_part
+    response = '$' + result + '💸'
 
 
     return response
@@ -98,7 +104,7 @@ with gr.Blocks() as demo:
 
             gr.Markdown(
                 """
-                ## Ingrese sus condiciones laborales y sociales 🤓
+                ## Ingrese sus condiciones sociolaborales capitalistas 🤓
                 """
             )
             
@@ -112,8 +118,8 @@ with gr.Blocks() as demo:
 
             sexo = gr.Radio(
                 label='Genero',
-                choices=['Hombre', 'Hujer'],
-                value='hombre',
+                choices=['Hombre', 'Mujer'],
+                value='Hombre',
             )
 
             alfabeto = gr.Radio(
