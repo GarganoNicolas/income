@@ -77,22 +77,76 @@ def predict(*args):
 
     # Cast numpy.int64 to just a int
     result = int(prediction[0])
+    dolar2019 = 35
+    result = result/dolar2019
 
+    import requests
+    url = 'https://dolarapi.com/v1/dolares/blue'
+
+    dolar_response = requests.get(url)
+    json_response = dolar_response.json()
+    compra_value = json_response['compra']
+    result = result*compra_value
 
     # Adaptación respuesta
+    result = int(result)
     result = str(result)
     length = len(result)
-    if length > 3:
+    if length > 6:
+        first_part = result[:length-6]
+        second_part = result[length-6:length-3]
+        third_part = result[length-3:]
+        result = first_part + '.' + second_part + '.' + third_part
+
+    elif length > 3 < 7:
         first_part = result[:length-3]
         second_part = result[length-3:]
         result = first_part + '.' + second_part
-    response = '$' + result + '💸'
+
+    response = '$\t' + result + '\t\t\t💸'
 
 
     return response
 
+css = '''
 
-with gr.Blocks() as demo:
+.gradio-container {
+    background-color: #FF000080;
+    color: white;
+}
+.gradio-input {
+    background-color: #FF0000;
+    color: white;
+}
+.gradio-output {
+    background-color: #FF0000;
+    color: white;
+}
+.gradio-container {
+    max-width: 600px;
+    margin: auto;
+    text-align: center;
+}
+
+.gradio-row {
+    max-width: 60px;
+    margin: auto;
+}
+.gradio-input-label, .gradio-output-label {
+    color: #FFCCCB;
+}
+
+img {
+    display: block;
+    align-items:center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+'''
+
+
+with gr.Blocks(css=css) as demo:
     gr.Markdown(
         """
         #   Frente unido de los trabajadores ⚒ 
@@ -104,7 +158,7 @@ with gr.Blocks() as demo:
 
             gr.Markdown(
                 """
-                ## Ingrese sus condiciones sociolaborales capitalistas 🤓
+                ## Ingrese sus condiciones sociolaborales  🤓
                 """
             )
             
@@ -149,17 +203,16 @@ with gr.Blocks() as demo:
                 value='Cuenta propia',
             )
 
-
         with gr.Column():
 
             gr.Markdown(
                 """
-                ## <img src="https://media.giphy.com/media/KESfG6KmWrBss/giphy.gif" alt="GIF">
+                ## Creemos este es el valor de tu explotacion
                 """
             )
             gr.Markdown(
                 """
-                ## Derecho salarial
+                ## <img src="https://media.giphy.com/media/KESfG6KmWrBss/giphy.gif" alt="GIF">
                 """
             )
 
@@ -179,7 +232,6 @@ with gr.Blocks() as demo:
                 api_name="prediccion"
             )
             
-
 
     gr.Markdown(
         """
