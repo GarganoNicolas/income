@@ -2,6 +2,8 @@ import gradio as gr
 import pandas as pd
 import pickle
 import os
+import requests
+
 
 # Define params names
 PARAMS_NAME = [
